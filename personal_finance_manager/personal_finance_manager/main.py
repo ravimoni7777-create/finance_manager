@@ -1,10 +1,9 @@
 import shutil
-import auth
-import transactions
-import reports
-import budgeting
-from database import create_tables, DB_FILE
-from personal_finance_manager import auth, transactions, reports, budgeting, database
+from . import auth
+from . import transactions
+from . import reports
+from . import budgeting
+from .database import create_tables, DB_FILE
 
 def logged_in_menu(user_id: int):
     """Displays the menu for a logged-in user."""
