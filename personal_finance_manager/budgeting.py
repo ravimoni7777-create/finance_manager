@@ -15,7 +15,6 @@ def set_budget(user_id: int):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Use INSERT OR REPLACE to handle updates easily
         cursor.execute(
             "INSERT OR REPLACE INTO budgets (user_id, category, amount, month, year) VALUES (?, ?, ?, ?, ?)",
             (user_id, category, amount, month, year)
@@ -50,7 +49,6 @@ def check_budget_notification(user_id: int, category: str, month: int, year: int
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Get budget for the category
     cursor.execute(
         "SELECT amount FROM budgets WHERE user_id = ? AND category = ? AND month = ? AND year = ?",
         (user_id, category, month, year)
@@ -59,11 +57,10 @@ def check_budget_notification(user_id: int, category: str, month: int, year: int
 
     if not budget:
         conn.close()
-        return  # No budget set for this category/period
+        return  
 
     budget_amount = budget['amount']
 
-    # Get total expenses for the category in the period
     cursor.execute(
         "SELECT SUM(amount) as total_expenses FROM transactions WHERE user_id = ? AND type = 'expense' AND category = ? AND strftime('%m', date) = ? AND strftime('%Y', date) = ?",
         (user_id, category, f"{month:02d}", str(year))
